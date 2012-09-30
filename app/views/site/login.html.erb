@@ -1,0 +1,12 @@
+<% form_for :player do |form| %>
+  <%= form.label :name, 'Name:' %>
+  <%= form.text_field :name %>
+  <br />
+
+  <%= form.label :password, 'Password:' %>
+  <%= form.password_field :password %>
+  <br />
+
+  <%= submit_tag 'Login' %>
+<% end %>
+<%= link_to 'register', :action => 'register' %>

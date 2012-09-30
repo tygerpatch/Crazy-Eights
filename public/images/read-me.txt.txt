@@ -1,0 +1,2 @@
+Card graphics were obtained from from sourceforge project by David Bellot (http://sourceforge.net/projects/svg-cards/)
+They were released under the GNU Lesser General Public License version 2.0 (LGPLv2).

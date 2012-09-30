@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <%= javascript_include_tag :defaults %>
+    <style type="text/css">
+      .card_class{}
+
+      .discard_pile_class
+      {
+        background-color: red;
+        border: 1px solid;
+        padding: 5px;
+        margin-bottom: 20px
+      }
+
+      .on_discard_pile_class
+      {
+        background-color: green;
+        border-width: 5px;
+        padding: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='discard_pile' class='discard_pile_class'></div>
+    
+    <!-- display cards on screen -->
+    <div id="hand_div"></div>
+
+    <script type="text/javascript">
+
+      // create Card class
+      function Card(rank, suit)
+      {
+        this.rank = rank;
+        this.suit = suit;
+      }
+
+      // create array of cards
+      cards = new Array();
+
+      // populate array
+      <% for i in 0...@cards.length %>
+        cards.push( new Card('<%=  @cards[i].rank.name %>', '<%=  @cards[i].suit.name %>') );
+      <% end %>
+
+      var max_id = cards.length;
+      var zIndex;
+      var swap = true;
+      var first_card;
+
+      // define create_card function
+      function create_card_image(rank, suit, index)
+      {
+        // create image element
+        var img = document.createElement('img');
+
+        img.setAttribute('src', '/images/' + rank + '_' + suit + '.gif');
+        img.setAttribute('class', 'card_class');
+        img.setAttribute('id', '' + index);
+        
+        img.style.position = 'absolute';
+        img.style.zIndex = index;
+
+        // bring card to front when mouse is hovered over it
+        img.onmouseover = function()
+        {
+          // save zIndex for when user tries to swap cards
+          zIndex = this.style.zIndex;
+          this.style.zIndex = cards.length;
+        }
+
+        // put card back in hand when mouse moves away from it
+        img.onmouseout = function()
+        {
+          // restore zIndex of card image
+          this.style.zIndex = zIndex;
+        }
+
+        // swap card
+        img.onclick = function()
+        {
+          // don't swap if user was dragging card to discard pile
+          if(!swap)
+          {
+            swap = true;
+            return;
+          }
+
+          // if this is the first card clicked...
+          if( first_card == null )
+          {
+            // ...raise it up
+            this.style.top = this.offsetTop - 20;
+            first_card = this;
+          }
+          else
+          {
+            // ...otherwise lower previously clicked on card
+            first_card.style.top = first_card.offsetTop + 20;
+
+            // and if a second, different card was clicked...
+            if(first_card != this)
+            {
+              // swap Card objects in array
+              var card = cards[first_card.id];
+              cards[first_card.id] = cards[this.id];
+              cards[this.id] = card;
+
+              // swap src
+              var src = first_card.getAttribute('src');
+              first_card.setAttribute('src', this.getAttribute('src'));
+              this.setAttribute('src', src);
+            }
+
+            // reset so no cards have been selected for swap
+            first_card = null;
+          }
+        }
+      
+        return img;
+      }
+
+      function put_card_in_hand(card_image, id)
+      {
+        $('hand_div').appendChild(card_image);
+        
+        if(id > 0)
+        {
+          $('' + id).style.left = $('' + (id - 1)).cumulativeOffset().left + 20;
+        }
+      }
+
+      // for each card in array
+      for(var i = 0; i < cards.length; i++)
+      {
+        // create card image (including functionality)
+        put_card_in_hand(create_card_image(cards[i].rank, cards[i].suit, i), i);
+        // make card draggable
+        new Draggable('' + i, {revert: true});
+      }
+
+      // set discard pile's dimensions to about same size as a card image
+      $('discard_pile').style.width = '85px';
+      $('discard_pile').style.height = '123px';
+
+      // make discard pile droppable
+      Droppables.add('discard_pile',
+      {
+        accept:'card_class',
+        hoverclass:'on_discard_pile_class',
+        onDrop: function(dragged, dropped, event)
+                {
+                  swap = false;
+                  new Ajax.Request('/site/discard',
+                  {
+                    method:'post',
+                    parameters: {id: dragged.id, rank: cards[dragged.id].rank, suit: cards[dragged.id].suit}
+                    // here's why it was important to keep the card's id the same as its index
+                  });
+                }
+      });
+      
+      function discard(valid, indx)
+      {
+        if(valid)
+        {                   
+          // remove card from array
+          var discards = cards.splice(indx, 1);
+          var card = discards[0];
+          
+          for(var i = 0; i < max_id; i++)
+          {
+            if(i < cards.length)
+            {
+              // update src attribute of card image
+              $('' + i).setAttribute('src', '/images/' + cards[i].rank + '_' + cards[i].suit + '.gif');
+              // Notice that id of card image matches with index into array
+            }
+            else
+            {
+              // hide old cards
+              $('' + i).setAttribute('style', 'display: none');              
+            }
+          }
+                    
+          // put card on discard pile
+          $('discard_pile').innerHTML = "<img src='/images/" + card.rank + '_' + card.suit + ".gif' />";
+        }
+      }
+    </script>
+  </body>
+</html>
+
+

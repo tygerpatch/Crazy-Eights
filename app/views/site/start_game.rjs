@@ -1,0 +1,12 @@
+#logger = Logger.new(STDOUT)
+#logger.info "start_game rjs"
+
+player = Player.find session[:id]
+game = player.game
+
+#logger.info "called by #{player.name}"
+
+if (game.players.count == 4)
+#  logger.info "redirect to play_game"
+  page.redirect_to :controller => :site, :action => :play_game
+end

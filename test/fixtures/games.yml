@@ -1,0 +1,36 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+
+# NOTE: I was getting inconsistent results using fixtures.  Therefore I had to comment them out.
+# Tests would pass if I ran all of them at once.  If I then tried to run the integration test, it would fail.
+
+
+#one: {}
+# column: value
+#
+#two: {}
+#  column: value
+
+#family:
+#  draw_pile: two_club, three_club
+#  discard_pile: two_heart, three_heart
+#
+#friends:
+#  draw_pile: two_club
+#  discard_pile: two_heart, three_heart
+
+# *************
+
+#one:
+#  current_player: 1
+#  discard_pile_id: 1
+#  has_ended: false
+
+#two:
+#  current_player: 1
+#  discard_pile_id: 1
+#  has_ended: false
+  

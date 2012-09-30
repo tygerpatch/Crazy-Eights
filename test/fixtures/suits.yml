@@ -1,0 +1,9 @@
+<% 
+suits = ['club', 'heart', 'diamond', 'spade']
+
+suits.each do |suit| 
+%>
+
+<%= suit %>:    
+  name: <%= suit %>
+<% end %>

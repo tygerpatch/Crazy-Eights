@@ -1,0 +1,26 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+player_1:
+  name: Player1
+  password: pass
+  seat_order: 1
+
+player_2:
+  name: Player2
+  password: pass
+  seat_order: 2
+
+player_3:
+  name: Player3
+  password: pass
+  seat_order: 3
+
+player_4:
+  name: Player4
+  password: pass
+  seat_order: 4
+
+player_5:
+  name: Player5
+  password: pass
+  seat_order: 1

@@ -1,0 +1,17 @@
+<% 
+ranks = ['ace', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king']
+
+suits = ['club', 'heart', 'diamond', 'spade'] 
+
+suits.each do |suit|
+	ranks.each do |rank|
+%>
+
+<%= rank %>_<%= suit %>:
+    rank: <%= rank %> 
+    suit: <%= suit %>
+
+<%
+    end
+  end
+%>
